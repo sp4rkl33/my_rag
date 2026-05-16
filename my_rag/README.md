@@ -66,7 +66,93 @@ ollama run llama3.1:8b "Hello!"
 
 ## Usage
 
-### Web UI (Recommended)
+### Terminal Mode (Interactive)
+
+Launch the interactive terminal interface for conversational RAG queries:
+
+**Windows:**
+```bash
+run_terminal.bat
+```
+
+**macOS/Linux:**
+```bash
+python terminal.py
+```
+
+This starts an interactive REPL where you can have ongoing conversations with your documents. Simply type your questions and get streaming responses.
+
+Features:
+- Interactive REPL with conversation history
+- **Conversation Memory**: AI remembers previous questions and answers for natural follow-up questions
+- Streaming responses in real-time
+- Rich terminal formatting with colors
+- Session management (save/load conversations)
+- Slash commands for document and configuration management
+
+**Available Commands:**
+- `/help` - Show available commands
+- `/history [n]` - View conversation history
+- `/context` - View current conversation context being used for memory
+- `/clear` - Clear conversation history
+- `/save [filename]` - Save current session
+- `/load <filename>` - Load a previous session
+- `/sessions` - List all saved sessions
+- `/list` - Show ingested documents
+- `/upload <filepath>` - Upload and ingest documents
+- `/config [parameter]` - View configuration
+- `/set <parameter> <value>` - Change configuration
+- `/exit` or `/quit` - Exit the application
+
+**Configuration Parameters:**
+- `model` - LLM model name (default: llama3.1:8b)
+- `top_k` - Number of documents to retrieve (1-20, default: 5)
+- `temperature` - LLM temperature (0-2, default: 0.7)
+- `threshold` - Similarity threshold (0-1, default: 0.3)
+- `context_window` - Number of conversation turns to remember (0 to disable, default: 5)
+
+**Example Session:**
+```
+llama3.1:8b> What is RAG?
+[Streaming response about RAG...]
+
+llama3.1:8b> Can you give me an example?
+[AI remembers the previous question about RAG and provides a relevant example]
+
+llama3.1:8b> What are the main components?
+[AI continues the conversation about RAG components]
+
+llama3.1:8b> /context
+Conversation Context (last 3 turns):
+1. User: What is RAG?
+   Assistant: [response summary...]
+2. User: Can you give me an example?
+   Assistant: [response summary...]
+3. User: What are the main components?
+   Assistant: [response summary...]
+
+llama3.1:8b> /save my-session
+✓ Session saved to: sessions/my-session.json
+
+llama3.1:8b> /exit
+```
+
+**Conversation Memory:**
+
+The terminal mode includes conversation memory that allows the AI to remember previous questions and answers within a session. This enables natural follow-up questions without repeating context.
+
+- **Default behavior**: Remembers last 5 conversation turns
+- **View context**: Use `/context` to see what the AI remembers
+- **Adjust memory**: Use `/set context_window <n>` to change how many turns to remember
+- **Disable memory**: Use `/set context_window 0` to disable conversation memory
+- **Clear memory**: Use `/clear` to reset the conversation history
+
+Examples of follow-up questions:
+- "What is machine learning?" → "Can you explain that in simpler terms?"
+- "How does RAG work?" → "What are its advantages?" → "Are there any limitations?"
+- "Tell me about the document" → "What does it say about X?" → "Can you elaborate on that?"
+
+### Web UI
 
 Launch the Streamlit interface:
 ```bash

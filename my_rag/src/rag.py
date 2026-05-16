@@ -131,7 +131,8 @@ class RAGPipeline:
         similarity_threshold: Optional[float] = None,
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        stream: bool = False
+        stream: bool = False,
+        conversation_history: Optional[List[Dict]] = None
     ) -> Dict:
         if self.vectorstore.get_document_count() == 0:
             return {
@@ -153,7 +154,7 @@ class RAGPipeline:
                 "error": "no_results"
             }
 
-        prompt = self.llm.construct_prompt(query, retrieved_chunks)
+        prompt = self.llm.construct_prompt(query, retrieved_chunks, conversation_history)
 
         if stream:
             return {

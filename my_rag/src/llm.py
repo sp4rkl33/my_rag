@@ -39,6 +39,7 @@ class OllamaLLM:
         self,
         query: str,
         context_chunks: List[Dict],
+        conversation_history: Optional[List[Dict]] = None,
         system_instruction: Optional[str] = None
     ) -> str:
         if system_instruction is None:
@@ -48,15 +49,29 @@ class OllamaLLM:
                 "If the context doesn't contain enough information, say so."
             )
 
+        # Format conversation history if provided
+        conversation_text = ""
+        if conversation_history:
+            for turn in conversation_history:
+                user_query = turn.get("query", "")
+                assistant_response = turn.get("response", "")
+                conversation_text += f"User: {user_query}\nAssistant: {assistant_response}\n\n"
+
         if not context_chunks:
-            prompt = f"{system_instruction}\n\nNo relevant context was found.\n\nQuestion: {query}\n\nAnswer:"
+            prompt = f"{system_instruction}\n\n"
+            if conversation_text:
+                prompt += f"Previous conversation:\n{conversation_text}"
+            prompt += f"No relevant context was found.\n\nQuestion: {query}\n\nAnswer:"
         else:
             context_text = "\n\n".join([
-                f"[Source: {chunk['source']}, Chunk {chunk['chunk_index']}]\n{chunk['text']}"
+                chunk['text']
                 for chunk in context_chunks
             ])
 
-            prompt = f"{system_instruction}\n\nContext:\n{context_text}\n\nQuestion: {query}\n\nAnswer:"
+            prompt = f"{system_instruction}\n\n"
+            if conversation_text:
+                prompt += f"Previous conversation:\n{conversation_text}"
+            prompt += f"Context:\n{context_text}\n\nQuestion: {query}\n\nAnswer:"
 
         return prompt
 

@@ -5,7 +5,8 @@
       "Bash(openspec propose *)",
       "Bash(openspec new *)",
       "Bash(openspec instructions *)",
-      "Bash(openspec status *)"
+      "Bash(openspec status *)",
+      "Bash(python test_conversation_memory.py)"
     ]
   }
 }
